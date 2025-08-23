@@ -259,21 +259,16 @@ function showSecretGif() {
   `;
   document.head.appendChild(style);
 
-
-  // === Сцена для эффекта ===
   const stage = document.createElement("div");
   stage.className = "scrm__stage";
   stage.style.display = "none";
   document.body.appendChild(stage);
 
-  // Аудио подготовка (создаём заранее, играем после жеста)
   const audio = new Audio(AUDIO_SRC);
   audio.preload = "auto";
   audio.loop = false;
-  audio.volume = 1.0; // максимум для элемента (не системная громкость)
-  // Чтобы не блокировалось политиками, запускаем только по клику на btnGo
+  audio.volume = 1.0;
 
-  // === Логика Konami-кода ===
   const KONAMI = [38,38,40,40,37,39,37,39,66,65]; // up up down down left right left right b a
   let buffer = [];
 
@@ -331,7 +326,7 @@ function showSecretGif() {
 
     // 0.60c
     setTimeout(() => {
-      stage.innerHTML = ""; // убрать flash
+      stage.innerHTML = "";
       const black = document.createElement("div");
       black.className = "scrm__black";
       stage.appendChild(black);
