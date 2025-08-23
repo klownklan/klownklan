@@ -100,6 +100,7 @@
     border-radius: 12px;
     cursor: pointer;
   }
+
 </style>
 </head>
 <body>
@@ -151,11 +152,271 @@ function showSecretGif() {
 }
 </script>
 
+<button id="secretBtn" aria-label="secret area" tabindex="-1"></button>
+
+<div id="secretModal" aria-hidden="true">
+  <div class="secret-modal__backdrop" id="secretBackdrop"></div>
+  <div class="secret-modal__box" role="dialog" aria-modal="true" aria-labelledby="secretTitle">
+    <h3 id="secretTitle">CODE PLEASE</h3>
+    <p class="secret-modal__hint">You only have one try?</p>
+    <div class="secret-modal__controls">
+      <input id="secretInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" placeholder="••••" />
+      <button id="secretSubmit" class="btn">OK</button>
+    </div>
+    <button id="secretClose" class="secret-modal__close" aria-label="Close">&times;</button>
+  </div>
+</div>
+
+<div id="secretCard" aria-hidden="true">
+  <div class="panel">
+    <div class="card card--front">
+      <div class="card__number">9860 0401 0748 3196</div>
+      <div class="card__expiry-date">10/17</div>
+      <div class="card__owner">klownklan</div>
+      <img class="card__logo"  src="https://humocard.uz/bitrix/templates/main/img/logo2.png"/>
+    </div>
+  </div>
+</div>
+
+<style>
+#secretBtn {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  z-index: 12000;
+  opacity: 0;
+  cursor: pointer;
+}
+
+#secretModal { display: none; position: fixed; inset: 0; z-index: 12100; font-family: Inter, system-ui, -apple-system, "Helvetica Neue", Arial; }
+#secretModal.open { display: block; }
+.secret-modal__backdrop {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
+}
+.secret-modal__box {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%,-50%);
+  min-width: 320px; max-width: 92vw;
+  background: linear-gradient(180deg,#0f1720 0%, #0b1220 100%);
+  border-radius: 12px;
+  padding: 18px 18px 16px;
+  color: #e6eef8;
+  box-shadow: 0 12px 40px rgba(2,6,23,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
+  text-align: center;
+  z-index: 12110;
+}
+.secret-modal__box h3 { margin: 4px 0 6px; font-weight: 600; font-size: 18px; color: #fff; }
+.secret-modal__hint { margin: 0 0 12px; font-size: 13px; color: #c8d6e8; opacity: .9; }
+.secret-modal__controls { display:flex; gap:10px; justify-content:center; align-items:center; }
+#secretInput {
+  width: 140px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  text-align: center;
+}
+#secretInput::placeholder { color: rgba(255,255,255,0.35); }
+.btn {
+  padding: 10px 14px;
+  border-radius: 9px;
+  border: 0;
+  background: linear-gradient(180deg,#ff5c5c,#e02b2b);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(224,43,43,0.25);
+}
+
+/* close cross */
+.secret-modal__close {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  border: 0;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.secret-modal__box.shake {
+  animation: shake 420ms ease;
+}
+@keyframes shake {
+  0% { transform: translate(-50%,-50%) translateX(0); }
+  20% { transform: translate(-50%,-50%) translateX(-10px); }
+  40% { transform: translate(-50%,-50%) translateX(8px); }
+  60% { transform: translate(-50%,-50%) translateX(-6px); }
+  80% { transform: translate(-50%,-50%) translateX(4px); }
+  100% { transform: translate(-50%,-50%) translateX(0); }
+}
+
+#secretCard {
+  display: none;
+  position: fixed;
+  right: 20px;
+  top: 80px;
+  z-index: 11900;
+  opacity: 0;
+  transform: translateY(-8px) scale(.99);
+  transition: opacity 320ms ease, transform 320ms cubic-bezier(.2,.9,.25,1);
+}
+#secretCard.visible {
+  display: block;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.panel { width: 600px; margin: 0 auto; margin-bottom: 50px; text-align: center; }
+
+.card {
+  font: 16px/1.5 'Helvetica Neue', Helvetica, sans-serif;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  width: 425px;
+  height: 270px;
+  text-align: left;
+  padding: 30px;
+  margin-bottom: 50px;
+  color: #fff;
+  border-radius: 20px;
+  box-sizing: border-box;
+  background: url(data:image/jpg;base64,/9j/4QAYRXhpZgAASUkqAAgAAAAAAAAAAAAAAP/sABFEdWNreQABAAQAAABGAAD/7gAmQWRvYmUAZMAAAAABAwAVBAMGCg0AAAWlAAAFyQAACgMAAA1W/9sAhAAEAwMDAwMEAwMEBgQDBAYHBQQEBQcIBgYHBgYICggJCQkJCAoKDAwMDAwKDAwNDQwMEREREREUFBQUFBQUFBQUAQQFBQgHCA8KCg8UDg4OFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wgARCAEOAakDAREAAhEBAxEB/8QAggABAQEBAQEBAAAAAAAAAAAAAAECBQQDBwEBAQEBAAAAAAAAAAAAAAAAAAECAxABAAAAAAAAAAAAAAAAAAAAoBEBAAAAAAAAAAAAAAAAAAAAoBIBAAAAAAAAAAAAAAAAAAAAoBMBAQEBAQEBAQADAQAAAAAAABEBECAwQFBwgKCQ/9oADAMBAAIRAxEAAAH8078BAQAAAhIhAAUFABapTRpLQoKUpSmqppKarRaqCKIAUHK5alCEAKAQEiAApaoAAKaKaspQCgpSlrRpNGqpqhSAhAQHM56hCCAFUEBIAFqlKACFKU1ZopQACgpa0aTRqtVSoUkWEJEIc7GoQkBSFAAQQLVNFKhSRQKaspo0AAAClrRpNGq1VKVBCLkkZIeDGoZIICgABAUpopUtASALWjRotEpFRAClqmk3WjVUpUEIuTMZIeLFysIQFAiUIClKU0lqgEEKpo0WtIUEiogBa0aTVaNVopUEIuTMZIeLFysIAAEiiApSmi2aABAUpTRqqhQSLIAFrRU0brRa0UJFhmMkIeDFiwIUCAgIUFKaS1SgEKCmi1pBQRUSkQorRU0arRqtFQRYZiEBzsagCAFgIQApSmktUFABSlLVKgLBEABS1TSU3Wq0UJFhIyBXM5aChQQEIICqDRSpaoBQUpS1UKJAAgAKWqaNpqtVoEISIQVyuWqUVQCEECVYFoaKVBaoKUpSggABAAAUtaNJutGqAzEIAcnlu1UoqkAiAAAtUpSpS1SlKAAQAAgABSmjVbTVUpCEiChyeXSpaqCggAAAKUtUoKlLWigEBAAAQAFKU2arSUpAQigcnlu1UtCgIAIAUFKWqUFNJRVIIgCkKIAEoLVNGjVUIWCJQHK5bpaqCgAUAAKEpSgtUpQUgBAAACgApUtaKUAEABzOe6C0ABUAAApaFKEoKUCkCAAAoqgFBSlSirECiAHOxupQAAKoAAKVBQWgKCgAgABQVBQWgKUFAIAAeDnu0AQpABQAC1QUAoCChRAAAVKKpQgoBQAAFAHixqgEFAAAUIKCgtAACgEAgBVKUqC0ABQABAKB5M0ACAAAFFCgFAQpKAAAsBQlBapQAUAAAAAp5c6IIAQAAoABQKFAAKAQAAoKVKBVAAAKAIAHmzoAQAAUACCgAAoAAAAAKKpQUAAAoAAKAefNAgAIAACigABQACoUQAoQUFAqgAAAoAi0EfCUQAEAAAABQAAKoAAAAKAVAAKAAAUAoB8c0QUBAAAAAACgAAoBACgCqAAUAAAFAKCnxzQSAKQSgAAAAKAAAAAAUAAoAAABQAUAp8pSFAiFAAAIAoAFIAAAABQAAAUAAAFAKAYlAgAIEAAKAAsAFAAAAAAAABQAAAUAFBmUCAEAAAAICgAAUCFAAAIAAKFBAAKoBEtFSBACAAEAAABQAAALIABAFACgKAogAACgARKAgAIAAAACgAgAAAAAAABQAAAAUAogShAAQAAAAAoBAAAAAAAAAAAUAAAoBYgoQAEAAAABQCAAAAAAAAAAAAAAoBQWBKEABAAAAAUAgAAAAAAAAAAAAAC1AKf/2gAIAQEAAQUCZZ//2gAIAQIAAQUCZZ//2gAIAQMAAQUCZZ//2gAIAQICBj8CZZ//2gAIAQMCBj8CZZ//2gAIAQEBBj8CZZ//2gAIAQEDAT8h/FET+DfxxET+BfxxET8eM/q4xn9TGfLf5eMZ8Nb/AC8Yz+rjGf1cYz5X+TWazWb8qv8AGqqzWazWaq+6v7r8Kqs1ms1VVVVVVfFX8tVVVVXxfFVms1VVVVVXzVVftVVVVVVVVVVV81VVVVVVV8VVX61VVVVVVVVVVV9VVVVVVVV8VVVVVfhVVVVVVVVVVVVfVVVVVVVVfFVVVVVVXl5VVVVVVVVVVVVVVVVVVVVVVVVfFXlVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVfjVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVflVVeVVVVVVVVVVVVVVVVVVVVVVVVVVX71VVVVVVV5VVVXlVVVVVVVVVVVVX8dVV7VVVVfFVVVVVVVVVVVVX8t/BVVVVVVVVVVeX+PVVVXtVeXt/k363/ef//aAAgBAgMBPyH/ALLP/9oACAEDAwE/If8Ass//2gAMAwEAAhEDEQAAEIIJJJAW+3322ycmaaStgH7oTBJFtBJIJIX2/wAkQGRa0ym7aBtYQQCCCSTvQCDtsiLZQLFpJbLaBtCHGSJKSZnySCf2JPPLI3LbZLKBtCYmiIECT+SSCSRb23/0pCmLJITlCYmyalgCQBSSADO2mu0qGQxJaR3wYuya1ySSQySSZU220nYHQzJaD8qJMBYHyEBQQQSZ23im5Q0mKLKC+6BuDIAQG1QSSQZk0kULSEiLZJAPkDeRbRIQLCTeCBMk0/bQgbJZLKTPQCBLStwASd14RJ8m7bJbJLJJZSc4Qa39huCB9t/yTdklLbLbMyk0pRmCX+0MPt/ttvtgLf0hKm2km20nIPvt5JDiAEk20/8AIEzdNfaaW27ZrQFEUAej7bQAAAv78gWWgkAkgCy9O2xpJL4kkLbf7Eg77fvf7f7pEESbr6W2lf8A34ABJH/zIIABIBBH3yZBABCScJKCf23+BBMl+0tgBm5B+32/+0kOksABJAe++STYALe/ZE+TJAJb2lrW323/AJCCQD7tv9rZd+wbZJbbSSkE0m22tv8AesAEgAkkgmb9JJtpJb/2y2SQAFpL/wC3/wD/AP8A+7BEttsltoJKVslttsgJJABIQJID326AABIBObybSbbf/wD9JLaACAASAQv/ALbb/b7/AG/Sbbbbbb+2/wDpP/paASQAASQSCBJ9pu22222kl/8A/wD/ANv/AKS222S2Wy3SXSSSTbJJBtttttJP/wD22/8A9vt9AZIbttpJI20kkkkkkm20km20m0kAIBJABJbJJJAEAAAE22kA22gA5AAAYADJJJIBJJI22/8AbaSEgSSSyWCAAAAAAASwAGSSSSSSS2SSSW2SySAgAgAAACwAySSSSSSSW/2SS/4SWAgAAAAAAAGSSSAAAAAD/wD/AP8A5PASAAAAAAAEAGSSAAAAAAB//wD/AOwnj//aAAgBAQMBPxBebvL51rW8iIzoiIzGYzGYzGYiIzGYxjGMYxjGd3PFZvhu8vb41vIiMxngIjMZjMZjMZiIiMxjGMYxjGMREbnNVeN7vL293sRmMxhnRERmMxmMxmIiInMYxnTGM8bjWtbqta3m+98ZjMZjMREREZjMZjMZiInjOYzwMYzuta1qtxvy3xmMxmMxE5ucjMZjMZjMRE5ueMZ0xjGd1reN5rWtxETzvMYxjMZ3c5OZjMZjGed7jGeBjGd1vTUa1vw3xjGMZ6zGMYz1vjGNNNM1msXm61rW83W9iJzebzOYxjGeYxjGM7ebvKqs1ms1pppms3u63Wt5G6vvW+cYxms1VXuMYxiqq8vjNZrNZrTTTNZqt1ut1u+FXlXm7zfGaxms1ms1V5jGMZyqqqqryqzWazwAzWardbrdVV3jCs1VVVVVVWazWazWaqqxjGcqqqqqqqrxhnkAZw3W63VVWGGazVVVXlVVZrNZrNZrNVms1ms1VVVXiqqqq8YZ4AYZw003wGGazWb0qqqqqqzWazWazWazWazWavxAKq8VVYZ0GGdGm+AzWazV8hVVVVWazWazWazWGGGfYAAqs1msMMMc7984zWazfIVVVVVWazWazWdGGGfUABVVWawwwz4//NZrN+IBVVVZrNZ4DPuXMKqqrDDDPj/qzV+gAKwzfyAAAM/EAP5VXpfmAGfiAAAwwwz8IAEKqqqqv6wAAADDDDPwgAAqqqqqr5C/lAAAMMMM/CAACqqqqqqqqr9QAL7ArOGfiAAAqqqqqqqqqqqr5Cr8AFVfygAAFVVVVXFVVVVVVVeKqqqqqqqqq/hAAC8VVVVVVVVVVVVVVVVVVVVVVVVVfYFXwLxV4vKqqqqqqqqqqqquqqqqqqqqqqqq8VVVVVVVV8qvaqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr2r+Gqqqqqqqqqqqqqqqqqqqqr43fFVVVfdVV9VVXtVVVVXtVVVVVV7vi/Cqv4qqqq+Kqqvavne75v4Kqqqqqr6qrnqr27+PPNX7VV9VVXtXzvjflnjd/JVVfrv4d/Xm/Lfrnjf4P//aAAgBAgMBPxD/ABDf94L/AMVf/9oACAEDAwE/EP8Az5if4En/ALXf/9k=) no-repeat 0 0 #141819;
+  background-size: cover;
+}
+
+.card__number {
+  font-size: 30px;
+  padding: 90px 0 15px;
+  text-align: center;
+}
+
+.card__expiry-date {
+  font-size: 14px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.card__owner {
+  text-align: left;
+}
+
+.card__logo {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  max-width: 90px;
+  height: auto;
+}
+
+.card__strip {
+  background: #000;
+  height: 50px;
+  margin-bottom: 30px;
+}
+
+.card__signature {
+  float: left;
+  width: 65%;
+  height: 40px;
+  margin-left: 10px;
+  background: #999;
+}
+
+.card--front {
+  font-size: 16px;
+  font-family: 'Source Code Pro', monospace;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, .6);
+}
+
+@media (max-width: 720px) {
+  #secretCard { left: 50%; right: auto; transform: translateX(-50%) translateY(0) scale(1); top: 40px; }
+  .panel { width: 92vw; }
+}
+</style>
+
+<script>
+(function(){
+  const secretBtn = document.getElementById('secretBtn');
+  const secretModal = document.getElementById('secretModal');
+  const secretBackdrop = document.getElementById('secretBackdrop');
+  const secretInput = document.getElementById('secretInput');
+  const secretSubmit = document.getElementById('secretSubmit');
+  const secretClose = document.getElementById('secretClose');
+  const secretCard = document.getElementById('secretCard');
+
+  const CODE = "1488";
+
+  let manualOpen = false;
+
+  secretBtn.addEventListener('click', () => {
+    manualOpen = true;
+    secretModal.classList.add('open');
+    secretModal.setAttribute('aria-hidden','false');
+    setTimeout(()=> secretInput.focus(), 80);
+  });
+
+  secretBackdrop.addEventListener('click', closeModal);
+  secretClose.addEventListener('click', closeModal);
+
+  secretSubmit.addEventListener('click', tryCode);
+  secretInput.addEventListener('keydown', (e) => {
+    if (e.key === "Enter") tryCode();
+    if (e.key === "Escape") closeModal();
+  });
+
+  function tryCode(){
+    const v = (secretInput.value || "").trim();
+    if (v === CODE) {
+      closeModal();
+      showCard();
+    } else {
+      secretModal.querySelector('.secret-modal__box').classList.remove('shake');
+      void secretModal.querySelector('.secret-modal__box').offsetWidth;
+      secretModal.querySelector('.secret-modal__box').classList.add('shake');
+      secretInput.value = "";
+      secretInput.focus();
+    }
+  }
+
+  function closeModal(){
+    secretModal.classList.remove('open');
+    secretModal.setAttribute('aria-hidden','true');
+    secretInput.blur();
+  }
+
+  function showCard(){
+    secretCard.classList.add('visible');
+    secretCard.setAttribute('aria-hidden','false');
+    // setTimeout(() => { secretCard.classList.remove('visible'); secretCard.setAttribute('aria-hidden','true'); }, 20000);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (secretModal.classList.contains('open')) closeModal();
+    }
+  });
+
+})();
+</script>
+
 </body>
 
 <script>
 (() => {
-  // === Константы ресурсов ===
   const IMG1 = "https://static.wikia.nocookie.net/487e564b-8a19-4cd6-953a-ab6d691a0b3b/scale-to-width/755";
   const IMG2 = "https://media.everskies.com/QaaTVz_AtariK_jH2X4z.png";
   const GIF  = "https://lomando.com/pimg/mainyukie.gif";
@@ -284,7 +545,7 @@ const preloadAll = async () => {
   audio.play().catch(err => console.warn("Custom audio blocked:", err));
   };
 
-  const KONAMI = [38,38,40,40,37,39,37,39,66,65]; // up up down down left right left right b a
+  const KONAMI = [38,38,40,40,37,39,37,39,66,65]; // ↑ ↑ ↓ ↓ ← → ← → B A
   let buffer = [];
 
   const onKey = (e) => {
@@ -367,7 +628,7 @@ const preloadAll = async () => {
       schedule();
 
       setTimeout(() => {
-        // stage.style.display = "none"; stage.innerHTML = "";
+        stage.style.display = "none"; stage.innerHTML = "";
       }, 2500);
     }, 600);
   };
