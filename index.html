@@ -160,11 +160,10 @@ function showSecretGif() {
   const GIF  = "https://lomando.com/pimg/mainyukie.gif";
   const AUDIO_SRC = "https://static.wikia.nocookie.net/the-uncanny-incredible/images/b/b5/Phase6Music.MP3/revision/latest?cb=20240723101504";
 
-  // === Предзагрузка (прогрев кэша без изменения DOM) ===
   const preloadImage = (src) => new Promise((resolve) => {
     const im = new Image();
     im.onload = () => resolve();
-    im.onerror = () => resolve(); // не блокируем
+    im.onerror = () => resolve();
     im.referrerPolicy = "no-referrer";
     im.src = src;
   });
